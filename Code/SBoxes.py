@@ -1,11 +1,14 @@
 import random
 
-# Generate a random integer between 0 and 2^48 - 1
-random_int = random.randint(0, 2 ** 48 - 1)
+def generate_random_binary():
+    # Generate a random integer between 0 and 2^48 - 1
+    random_int = random.randint(0, 2 ** 48 - 1)
 
-# Convert the integer to a binary string
-binary_string = bin(random_int)[2:].zfill(48)
-print("Binary string generated is : ", binary_string)
+    # Convert the integer to a binary string
+    binary_string = bin(random_int)[2:].zfill(48)
+    print("Binary string generated is : ", binary_string)
+
+    return binary_string
 
 
 SBox1 = [
@@ -127,6 +130,8 @@ def slice_number(binary_number):
         step += 6
     return binary_list
 
+
+binary_string = generate_random_binary()
 
 sliced = slice_number(binary_string)
 print("Random binary string 48 bitesh sliced ne 6 copa nga 8: ", sliced)
