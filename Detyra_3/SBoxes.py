@@ -22,7 +22,8 @@ class FeistelCipher:
 
     @staticmethod
     def padding(message):
-        pass
+        difference = 64 - len(message)
+        return message + '0'*difference
 
     @staticmethod
     def feistel_round(message):
@@ -39,6 +40,6 @@ class FeistelCipher:
     @staticmethod
     def switch_left_with_right(message):
         pass
-    
+
     def encrypt(self):
         pass
