@@ -20,14 +20,20 @@ class FeistelCipher:
     def binary_message_divide(binary_message):
         pass
 
+    # This function adds padding to the message to make it 64 blocks
     @staticmethod
     def padding(message):
         difference = 64 - len(message)
         return message + '0'*difference
 
+    # This function simulates one round of the feistel cipher
     @staticmethod
-    def feistel_round(message):
-        pass
+    def feistel_round(message, subkey):
+        left_part = message[:32]
+        right_part = message[32:]
+        function_output = FeistelCipher.feistel_function(right_part, subkey)
+        new_right_part = FeistelCipher.XOR(left_part, function_output)
+        return right_part + new_right_part
 
     @staticmethod
     def feistel_function(message_32bit, subkey_48bit):
@@ -36,6 +42,13 @@ class FeistelCipher:
     @staticmethod
     def xor(a, b):
         pass
+
+    @staticmethod
+    def XOR(word1, word2):
+        result = ''
+        for i in range(word1):
+            result += FeistelCipher.xor(word1[i], word2[i])
+        return result
 
     @staticmethod
     def switch_left_with_right(message):
