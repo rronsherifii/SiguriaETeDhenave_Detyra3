@@ -17,6 +17,7 @@ from SubKeyGenerator import *
 message = "Hello Guys"
 key = '1234567887654321'
 
+
 feistel = FeistelCipher(message, key)
 
 enc_blocks = feistel.execute()

@@ -88,9 +88,15 @@ class FeistelCipher:
 
     @staticmethod
     def decimal_to_binary(decimal_num):
+        binary_num = bin(decimal_num)[2:]
 
-        binary_num = bin(decimal_num)
-        return binary_num[2:]
+        difference = 4 - len(binary_num)
+        if (difference > 0):
+            binary_num = '0' * difference + binary_num
+        else:
+            binary_num = binary_num
+
+        return binary_num
 
     @staticmethod
     def slice_number(binary_number):
