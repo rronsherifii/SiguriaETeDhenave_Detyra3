@@ -49,13 +49,21 @@ pc2_table = [
 subkey_matrix = []
 
 
-def permutate_pc1(pc1, binary_key_56):
+def permutate_pc1(pc1, binary_key):
     permutated_key = list()
+
+
+
+    for i in range(0, len(binary_key)):
+        if ((i + 1) % 8 == 0):
+            pass
+        else:
+            index_list_1.append(i + 1)
 
     for i in range(0, len(pc1)):
         for j in range(0, len(index_list_1)):
             if (pc1[i] == index_list_1[j]):
-                permutated_key.append(binary_key_56[j])
+                permutated_key.append(binary_key[j])
 
     return ''.join(permutated_key)
 
@@ -147,10 +155,10 @@ def final_subkeys_pc2(shifted_16_subkeys):
 binary_key_64 = generate_binary_key()
 print("Binary key generated is : ", binary_key_64)
 
-new = remove_parity_bits(binary_key_64)
-print("compressed key is: ", new)
+# new = remove_parity_bits(binary_key_64)
+# print("compressed key is: ", new)
 
-permute = permutate_pc1(pc1_table, new)
+permute = permutate_pc1(pc1_table, binary_key_64)
 print("Permuted key is:", permute)
 
 print("Tash marrim celesin e permutuar pas pc1 56 bitesh dhe gjenerojme 16 subcelesa te shiftuar")
