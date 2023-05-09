@@ -18,6 +18,7 @@ class FeistelCipher:
         binary_message = list()
         for i in message:
             binary_message.append(bin(ord(i))[2:])
+            #message
 
         return ''.join(binary_message)
 
