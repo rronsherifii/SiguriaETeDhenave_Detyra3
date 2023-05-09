@@ -15,12 +15,36 @@ class FeistelCipher:
 
     @staticmethod
     def message_to_binary(message):
-        pass
+        binary_message = list()
+        for i in message:
+            binary_message.append(bin(ord(i))[2:])
+
+        return ''.join(binary_message)
+
 
     @staticmethod
     def binary_message_divide(binary_message):
-        pass
+        blocks = list()
+        start = 0
+        step = 64
 
+        length = len(binary_message)
+        limit=0
+
+        while length != 0:
+            if(length<64):
+                limit +=1
+                break
+            else:
+                length -= 64
+                limit += 1
+
+        for i in range(0,limit):
+            blocks.append(binary_message[start:step])
+            start = step
+            step += 64
+
+        return blocks
     # This function adds padding to the message to make it 64 blocks
     @staticmethod
     def padding(message):
@@ -57,3 +81,10 @@ class FeistelCipher:
 
     def encrypt(self):
         pass
+
+msg = FeistelCipher.message_to_binary("Hello Guys")
+print(msg)
+
+
+blocks = FeistelCipher.binary_message_divide(msg)
+print(blocks)
