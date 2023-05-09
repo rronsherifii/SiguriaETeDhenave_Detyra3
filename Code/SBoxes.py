@@ -1,12 +1,12 @@
 import random
 
+
 def generate_random_binary():
     # Generate a random integer between 0 and 2^48 - 1
     random_int = random.randint(0, 2 ** 48 - 1)
 
     # Convert the integer to a binary string
     binary_string = bin(random_int)[2:].zfill(48)
-    print("Binary string generated is : ", binary_string)
 
     return binary_string
 
@@ -98,6 +98,17 @@ def binary_to_decimal(binary_string):
     return decimal_value
 
 
+def slice_number(binary_number):
+    binary_list = list()
+    start = 0
+    step = 6
+    for i in range(0, 8):
+        binary_list.append(binary_number[start:step])
+        start = step
+        step += 6
+    return binary_list
+
+
 def zipping(entry, sbox):
     difference = 6 - len(entry)
     if (difference > 0):
@@ -120,43 +131,30 @@ def zipping(entry, sbox):
     return sbox[row][column]
 
 
-def slice_number(binary_number):
-    binary_list = list()
-    start = 0
-    step = 6
-    for i in range(0, 8):
-        binary_list.append(binary_number[start:step])
-        start = step
-        step += 6
-    return binary_list
-
-
-binary_string = generate_random_binary()
-
-sliced = slice_number(binary_string)
-print("Random binary string 48 bitesh sliced ne 6 copa nga 8: ", sliced)
-
-
+# krijon listen me ekuivalentet decimale te anetareve 6 bit binar te cilet hyjne ne sboxat e tyre perkates
 def compress_decimal(binary_list, sboxes_list):
     final_list = list()
     for i in range(0, 8):
         final_list.append(zipping(binary_list[i], Sboxes[i]))
     return final_list
 
-decimal_list = compress_decimal(sliced, Sboxes)
-
+# kthejme ekuivalentet decimale te sboxave ne numra binare ne dalje qe te na japin 32 bit
 def compress_binary(list_decimal):
     lista = list()
-    for i in range(0,len(list_decimal)):
+    for i in range(0, len(list_decimal)):
         lista.append(decimal_to_binary(list_decimal[i]))
 
     return ''.join(lista)
 
+
+binary_string = generate_random_binary()
+print("Binary string generated is : ", binary_string)
+
+sliced = slice_number(binary_string)
+print("Random binary string 48 bitesh sliced ne 6 copa nga 8: ", sliced)
+
+decimal_list = compress_decimal(sliced, Sboxes)
+print("Copezat e binary string te futur ne SBox japin keto vlera ekuivalente decimale: ", decimal_list)
+
 binary_number = compress_binary(decimal_list)
-
-print("Copezat e binary string te futur ne SBox japin keto vlera ekuivalente decimale: ",decimal_list)
-
-
-print("Vlera binare e kompresuar pasi ka kaluar ne SBox eshte: ",binary_number)
-
-
+print("Vlera binare e kompresuar pasi ka kaluar ne SBox eshte: ", binary_number)

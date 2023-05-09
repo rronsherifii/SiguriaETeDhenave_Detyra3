@@ -45,9 +45,7 @@ pc2_table = [
     14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2,
     41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32]
 
-# e mbushim matricen me subkeys te shiftuar njera pas tjetres. Pasi subkey i ardhshem varet nga ai paraprak
-# na duhet te perdorim rekursion ashtu qe ne fund futet celesi i shiftuar si hyrje per krijimin e celesit te ri
-# ne fund te cdo shiftimi ruajme celesin ne matrice
+# e mbushim matricen me subkeys te shiftuar njera pas tjetres.
 subkey_matrix = []
 
 

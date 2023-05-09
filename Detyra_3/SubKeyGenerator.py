@@ -7,3 +7,17 @@ class SubKeyGenerator:
 
     def __init__(self, key):
         self.__key = key
+
+    def hex_to_binary(self):
+        # Convert the hexadecimal string to an integer
+        decimal_num = int(self.__key, 16)
+
+        # Convert the decimal number to a binary string
+        binary_string = bin(decimal_num)[2:]
+
+        # Pad the binary string with leading zeros if necessary
+        num_padding_bits = len(self.__key) * 4 - len(binary_string)
+        if num_padding_bits > 0:
+            binary_string = '0' * num_padding_bits + binary_string
+
+        return binary_string
