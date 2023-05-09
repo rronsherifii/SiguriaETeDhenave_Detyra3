@@ -61,13 +61,116 @@ class FeistelCipher:
         new_right_part = FeistelCipher.XOR(left_part, function_output)
         return right_part + new_right_part
 
+    ##Ky eshte feistel f
     @staticmethod
     def feistel_function(message_32bit, subkey_48bit):
-        pass
+        message_48bit = FeistelCipher.P_Box(message_32bit)
+        sbox_input = FeistelCipher.XOR(message_48bit,subkey_48bit)
+        sbox_input_list = FeistelCipher.slice_number(sbox_input)
+        sbox_decimal_list = FeistelCipher.get_sbox_output_decimal(sbox_input_list)
+        sbox_binary = FeistelCipher.get_sbox_binary(sbox_decimal_list)
+
+        return FeistelCipher.Straight_PBox(sbox_binary)
+
+    @staticmethod
+    def binary_to_decimal(binary_string):
+        decimal_value = 0
+        binary_string = str(binary_string)
+
+        binary_string = binary_string[::-1]  # e kthen string mbrapsht
+
+        for i in range(0, len(binary_string)):
+            decimal_value += int(binary_string[i]) * (2 ** i)
+
+        return decimal_value
+
+    @staticmethod
+    def decimal_to_binary(decimal_num):
+
+        binary_num = bin(decimal_num)
+        return binary_num[2:]
+
+    @staticmethod
+    def slice_number(binary_number):
+        binary_list = list()
+        start = 0
+        step = 6
+        for i in range(0, 8):
+            binary_list.append(binary_number[start:step])
+            start = step
+            step += 6
+        return binary_list
+
+    @staticmethod
+    def Sbox_Access(entry, sbox):
+        row = list()
+        column = list()
+
+        row.append(entry[0])
+        row.append(entry[len(entry) - 1])
+
+        for i in range(1, len(entry) - 1):
+            column.append(entry[i])
+
+        row = FeistelCipher.binary_to_decimal(''.join(row))
+        column = FeistelCipher.binary_to_decimal(''.join(column))
+
+        return sbox[row][column]
+
+    @staticmethod
+    def get_sbox_output_decimal(binary_list):
+        final_list = list()
+        for i in range(0, 8):
+            final_list.append(FeistelCipher.Sbox_Access(binary_list[i], SBoxes.sboxes_list[i]))
+        return final_list
+
+
+    @staticmethod
+    def get_sbox_binary(list_decimal):
+        lista = list()
+        for i in range(0, len(list_decimal)):
+            lista.append(FeistelCipher.decimal_to_binary(list_decimal[i]))
+
+        return ''.join(lista)
+
+    @staticmethod
+    def P_Box(message):
+        e_table = [
+            32,  1,  2,  3,  4,  5,  4,  5,
+            6,  7,  8,  9,  8,  9, 10, 11,
+            12, 13, 12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21, 20, 21,
+            22, 23, 24, 25, 24, 25, 26, 27,
+            28, 29, 28, 29, 30, 31, 32,  1
+        ]
+        message_dictionary = SubKeyGenerator.get_index_dictionary(message)
+        extended_message = SubKeyGenerator.PC(message_dictionary, e_table)
+
+        return extended_message
+
+    @staticmethod
+    def Straight_PBox(message):
+        last_pbox = [
+            16,  7, 20, 21, 29, 12, 28, 17,
+            1, 15, 23, 26,  5, 18, 31, 10,
+            2,  8, 24, 14, 32, 27,  3,  9,
+            19, 13, 30,  6, 22, 11,  4, 25
+        ]
+        message_dictionary = SubKeyGenerator.get_index_dictionary(message)
+        extended_message = SubKeyGenerator.PC(message_dictionary, last_pbox)
+
+        return extended_message
 
     @staticmethod
     def xor(a, b):
-        pass
+        if a == '1' and b == '1':
+            return '0'
+        elif a == '1' and b == '0':
+            return '1'
+        elif a == '0' and b == '1':
+            return '1'
+        elif a == '0' and b == '0':
+            return '0'
 
     @staticmethod
     def XOR(word1, word2):
