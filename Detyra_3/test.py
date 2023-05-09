@@ -13,12 +13,11 @@
 from FeistelCipher import *
 from SubKeyGenerator import *
 
-
 message = "Hello Guys"
+message2 = "HlÍ<k::3ÏËC5pÏI"
 key = '1234567887654321'
 
+feistel = FeistelCipher(message2, key)
 
-feistel = FeistelCipher(message, key)
+feistel.execute_d()
 
-enc_blocks = feistel.execute()
-print(enc_blocks)
