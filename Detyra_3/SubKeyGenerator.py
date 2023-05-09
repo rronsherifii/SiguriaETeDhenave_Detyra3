@@ -62,11 +62,8 @@ class SubKeyGenerator:
 
     def generate(self):
         key_binary = SubKeyGenerator.hex_to_binary(self.__key)
-        print(key_binary)
         key_64bit_indexes = SubKeyGenerator.get_index_dictionary(key_binary)
-        print(key_64bit_indexes)
         permuted_key_56bits = SubKeyGenerator.PC(key_64bit_indexes, self.pc1_table)
-        print(permuted_key_56bits)
         subkeys_48bit = list()
         key_56bit = permuted_key_56bits
 

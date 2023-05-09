@@ -10,8 +10,9 @@ from SBoxes import *
 # Expand 32 -> 48
 class FeistelCipher:
     def __init__(self, message, key):
-        self.__message = message  # mesazhi
-        self.__subkeys = SubKeyGenerator.generate(key)  # lista me 16 subkeys
+        self.__message = message
+        self.__subkey_object = SubKeyGenerator(key)
+        self.__subkeys = self.__subkey_object.generate()
 
     @staticmethod
     def message_to_binary(message):
@@ -82,7 +83,7 @@ class FeistelCipher:
         for i in range(0, len(binary_string)):
             decimal_value += int(binary_string[i]) * (2 ** i)
 
-        return decimal_value
+        return str(decimal_value)
 
     @staticmethod
     def decimal_to_binary(decimal_num):
@@ -103,19 +104,13 @@ class FeistelCipher:
 
     @staticmethod
     def Sbox_Access(entry, sbox):
-        row = list()
-        column = list()
+        row = entry[0] + entry[-1]
+        column = entry[1:5]
 
-        row.append(entry[0])
-        row.append(entry[len(entry) - 1])
+        row = FeistelCipher.binary_to_decimal(row)
+        column = FeistelCipher.binary_to_decimal(column)
 
-        for i in range(1, len(entry) - 1):
-            column.append(entry[i])
-
-        row = FeistelCipher.binary_to_decimal(''.join(row))
-        column = FeistelCipher.binary_to_decimal(''.join(column))
-
-        return sbox[row][column]
+        return sbox[int(row)][int(column)]
 
     @staticmethod
     def get_sbox_output_decimal(binary_list):
@@ -175,20 +170,24 @@ class FeistelCipher:
     @staticmethod
     def XOR(word1, word2):
         result = ''
-        for i in range(word1):
-            result += FeistelCipher.xor(word1[i], word2[i])
+        for i in range(len(word1)):
+            result += str(FeistelCipher.xor(word1[i], word2[i]))
         return result
 
     @staticmethod
     def switch_left_with_right(message):
-        pass
+        left_part = message[:32]
+        right_part = message[32:]
+        return right_part + left_part
 
-    def encrypt(self):
-        pass
+    def execute(self):
+        binary_message = FeistelCipher.message_to_binary(self.__message)
+        binary_message_blocks = FeistelCipher.binary_message_divide(binary_message)
+        placeholder = binary_message_blocks[0]
+        encrypted_message_blocks = list()
+        for block in binary_message_blocks:
+            for i in range(0, 16):
+                placeholder = FeistelCipher.feistel_round(placeholder, self.__subkeys[i])
+            encrypted_message_blocks.append(FeistelCipher.switch_left_with_right(placeholder))
 
-msg = FeistelCipher.message_to_binary("Hello Guys")
-print(msg)
-
-
-blocks = FeistelCipher.binary_message_divide(msg)
-print(blocks)
+        return encrypted_message_blocks

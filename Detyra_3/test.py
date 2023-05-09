@@ -10,6 +10,14 @@
 # ...
 # Per secilin round kemi nje PC2, i cili na i kthen ne 48 bit dhe i ben permute
 
-from SBoxes import *
+from FeistelCipher import *
+from SubKeyGenerator import *
 
-print(SBoxes.SBox1)
+
+message = "Hello Guys"
+key = '1234567887654321'
+
+feistel = FeistelCipher(message, key)
+
+enc_blocks = feistel.execute()
+print(enc_blocks)
