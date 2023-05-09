@@ -41,11 +41,11 @@ class SubKeyGenerator:
         return key_indexes
 
     @staticmethod
-    def PC1(key_64bits_indexes, permutation_table):
-        permuted_key_56bit = ''
+    def PC(key_indexes, permutation_table):
+        permuted_key = ''
         for i in permutation_table:
-            permuted_key_56bit += key_64bits_indexes[i]
-        return permuted_key_56bit
+            permuted_key += key_indexes[i]
+        return permuted_key
 
     @staticmethod
     def shift_left(half_round_key, shamt):
@@ -61,13 +61,26 @@ class SubKeyGenerator:
         shifted_key_joined = part1 + part2
         return shifted_key_joined
 
+
     @staticmethod
-    def round(key_56bits, round_number, permutation_table):
-        pass
+    def round(key_56bits, shamt, permutation_table):
+        round_key = SubKeyGenerator.divide_and_shift(key_56bits, shamt)
+        key_56bit_indexes = SubKeyGenerator.get_index_dictionary(round_key)
+        key_48bit = SubKeyGenerator.PC(key_56bit_indexes, permutation_table)
+
+        return key_48bit, round_key
+
 
     def generate(self):
         key_binary = SubKeyGenerator.hex_to_binary(self.__key)
-        key_64bit_indexes = SubKeyGenerator.get_indexes(key_binary)
-        permuted_key_56bits = SubKeyGenerator.PC1(key_64bit_indexes, self.pc1_table)
+        key_64bit_indexes = SubKeyGenerator.get_index_dictionary(key_binary)
+        permuted_key_56bits = SubKeyGenerator.PC(key_64bit_indexes, self.pc1_table)
         subkeys_48bit = list()
+        key_56bit = permuted_key_56bits
+
+        for i in range(1, 17):
+            placeholder, key_56bit = SubKeyGenerator.round(key_56bit, self.shift_table[i], self.pc2_table)
+            subkeys_48bit.append(placeholder)
+
+        return subkeys_48bit
 
