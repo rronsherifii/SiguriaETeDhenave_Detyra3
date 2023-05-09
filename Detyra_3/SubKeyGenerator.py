@@ -44,7 +44,7 @@ class SubKeyGenerator:
     def PC(key_indexes, permutation_table):
         permuted_key = ''
         for i in permutation_table:
-            permuted_key += key_indexes[i]
+            permuted_key += str(key_indexes.get(i))
         return permuted_key
 
     @staticmethod
