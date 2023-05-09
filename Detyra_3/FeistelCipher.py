@@ -18,8 +18,9 @@ class FeistelCipher:
     def message_to_binary(message):
         binary_message = list()
         for i in message:
-            binary_message.append(bin(ord(i))[2:])
-            #message
+            word = bin(ord(i))[2:]
+            binary_message.append(FeistelCipher.char_to_8_bit(word))
+
 
         return ''.join(binary_message)
 
@@ -179,6 +180,11 @@ class FeistelCipher:
         left_part = message[:32]
         right_part = message[32:]
         return right_part + left_part
+
+    @staticmethod
+    def char_to_8_bit(char):
+        difference = 8 - len(char)
+        return '0'*difference + char
 
     def execute(self):
         binary_message = FeistelCipher.message_to_binary(self.__message)
