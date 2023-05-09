@@ -7,6 +7,7 @@ class SubKeyGenerator:
 
     def __init__(self, key):
         self.__key = key
+        self.__dictionary_key = dict()
 
     def hex_to_binary(self):
         # Convert the hexadecimal string to an integer
@@ -21,3 +22,11 @@ class SubKeyGenerator:
             binary_string = '0' * num_padding_bits + binary_string
 
         return binary_string
+
+    def get_indexes(self):
+        for i in range(1, len(self.__key)+1):
+            self.__dictionary_key[i] = self.__key[i]
+
+    def encrypt(self):
+        self.__key = self.hex_to_binary()
+        self.get_indexes()
