@@ -13,11 +13,58 @@
 from FeistelCipher import *
 from SubKeyGenerator import *
 
-message = "Hello Guys"
-message2 = "HlÍ<k::3ÏËC5pÏI"
-key = '1234567887654321'
+message = "Ky eshte dekriptimi i bere me algoritmin DES"
+key = '133457799BBCDFF1'
+subkey1 = '000110110000001011101111111111000111000001110010'
 
-feistel = FeistelCipher(message2, key)
+print("16 subkeys generated: ")
+feistel = FeistelCipher(message, key)
 
-feistel.execute_d()
+# mesazhi = feistel.message_to_binary(message)
+# print("\nMessage to binary: ", mesazhi)
+#
+# divided = feistel.binary_message_divide(mesazhi)
+# print("\nBinary message in blocks of 64: ", divided)
+#
+# message32 = divided[0][32:]
+# print("\nRight half of message: ",message32)
+#
+#
+# message48 = feistel.P_Box(message32)
+# print("Permuted 48 bits of message: ",message48)
+#
+# xored_msg = feistel.XOR(message48,subkey1)
+# print("\nXored 48 bit permute with subkey of round: ",xored_msg)
+#
+# list_before_sbox = feistel.slice_number(xored_msg)
+#
+# print("\nList before sbox",list_before_sbox)
+#
+# sbox_output_decimal = feistel.get_sbox_output_decimal(list_before_sbox)
+# print("\nOutput decimal of sboxes is: ", sbox_output_decimal)
+#
+# sbox_output_binary = feistel.get_sbox_binary(sbox_output_decimal)
+# print("\nOutput of sboxes in binary: ",sbox_output_binary)
+#
+# last_permute = feistel.Straight_PBox(sbox_output_binary)
+# print("\nMessage after last permute: ",last_permute)
+#
+#
+# other_way = feistel.feistel_function(message32,subkey1)
+# print("\nFeistel function : ",other_way)
+#
+# round = feistel.feistel_round(mesazhi,subkey1)
+#
+#
+# decimal_val = feistel.binary_to_decimal(subkey1)
+# print("\nBinary to decimal: ",decimal_val)
+#
+# binary_val = feistel.decimal_to_binary(decimal_val)
+# print("\nDecimal to binary: ", binary_val)
+
+
+output = feistel.execute()
+
+feistel2 = FeistelCipher(output,key)
+feistel2.execute_d()
 
