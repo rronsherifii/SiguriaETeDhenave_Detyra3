@@ -104,7 +104,6 @@ class MyWindow(QMainWindow):
         ciphertext = feistel.encrypt()
         self.ciphertext_box.setText(ciphertext)
 
-
     def decryption(self):
         if len(self.key_text_box.text()) != 16:
             MyWindow.alert("The key length must be exactly 16!")

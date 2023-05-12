@@ -29,8 +29,18 @@ class FeistelCipher:
         return message + '0'*difference
 
     @staticmethod
-    def unpadding(message):
-        pass
+    def remove_padding(message):
+        # Find the position of the last non-zero bit in the message
+        last_nonzero = len(message) - 1
+        while last_nonzero >= 0 and message[last_nonzero] == '0':
+            last_nonzero -= 1
+
+        # If the last non-zero bit is not followed by a zero, the padding is invalid
+        if last_nonzero < 0 or message[last_nonzero] != '1':
+            raise ValueError("Invalid padding")
+
+        # Return the message with the padding removed
+        return message[:last_nonzero]
 
     # works
     @staticmethod
@@ -215,7 +225,6 @@ class FeistelCipher:
         binary_message_blocks = FeistelCipher.binary_message_divide(binary_message)
         print("\nBinary in blocks: ", binary_message_blocks)
 
-        # placeholder = binary_message_blocks[0]
         counter = 0
         encrypted_message_blocks = list()
         for block in binary_message_blocks:
@@ -239,6 +248,9 @@ class FeistelCipher:
         print("\n\nBinary Message is : ", binary_message)
         binary_message_blocks = FeistelCipher.binary_message_divide(binary_message)
         print("\nBinary in blocks: ", binary_message_blocks)
+
+        # for i in range(len(binary_message_blocks)):
+        #     binary_message_blocks[i] = FeistelCipher.remove_padding(binary_message_blocks[i])
 
         counter  = 0
         # placeholder = binary_message_blocks[0]
