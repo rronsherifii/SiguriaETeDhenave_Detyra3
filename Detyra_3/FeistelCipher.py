@@ -4,14 +4,11 @@ from SBoxes import *
 
 class FeistelCipher:
 
-    # works
     def __init__(self, message, key):
         self.__message = message
         self.__subkey_object = SubKeyGenerator(key)
         self.__subkeys = self.__subkey_object.generate()
-        print(self.__subkeys)
 
-    # works
     @staticmethod
     def message_to_binary(message):
         binary_message = list()
@@ -21,7 +18,6 @@ class FeistelCipher:
 
         return ''.join(binary_message)
 
-        # works
     # This function adds padding to the message to make it 64 blocks
     @staticmethod
     def padding(message):
@@ -30,19 +26,12 @@ class FeistelCipher:
 
     @staticmethod
     def remove_padding(message):
-        # Find the position of the last non-zero bit in the message
-        last_nonzero = len(message) - 1
-        while last_nonzero >= 0 and message[last_nonzero] == '0':
-            last_nonzero -= 1
+        message_blocks = ''
+        for i in range(0, len(message), 8):
+            if message[i:i+8] != '00000000':
+                message_blocks += message[i:i+8]
+        return message_blocks
 
-        # If the last non-zero bit is not followed by a zero, the padding is invalid
-        if last_nonzero < 0 or message[last_nonzero] != '1':
-            raise ValueError("Invalid padding")
-
-        # Return the message with the padding removed
-        return message[:last_nonzero]
-
-    # works
     @staticmethod
     def binary_message_divide(binary_message):
         blocks = list()
@@ -219,11 +208,27 @@ class FeistelCipher:
 
         return plaintext
 
+    @staticmethod
+    def binary_to_hex(binary_string):
+        output = ''
+        for i in range(0, len(binary_string), 4):
+            output += str(hex(int(binary_string[i:i+4], 2))[2:])
+        return output
+
+    @staticmethod
+    def hex_to_binary(hex_string):
+        output = ''
+        for i in hex_string:
+            char = str(bin(int(i, 16))[2:])
+            difference = 4 - len(char)
+            output += '0'*difference + char
+        return output
+
     def encrypt(self):
         binary_message = FeistelCipher.message_to_binary(self.__message)
-        print("\n\nBinary Message is : ", binary_message)
+        print("Binary Message is : ", binary_message)
         binary_message_blocks = FeistelCipher.binary_message_divide(binary_message)
-        print("\nBinary in blocks: ", binary_message_blocks)
+        print("Binary in blocks: ", binary_message_blocks)
 
         counter = 0
         encrypted_message_blocks = list()
@@ -232,28 +237,27 @@ class FeistelCipher:
             for i in range(0, 16):
                 placeholder = FeistelCipher.feistel_round(placeholder, self.__subkeys[i])
             placeholder = FeistelCipher.switch_left_with_right(placeholder)
-            # encrypted_message_blocks.append(FeistelCipher.switch_left_with_right(placeholder))
             encrypted_message_blocks.append(placeholder)
             counter += 1
 
         binary_string = ''.join(m for m in encrypted_message_blocks)
-        print("\nBinary i enkriptuar: ", binary_string)
-        output_text = FeistelCipher.binary_to_plaintext(binary_string)
-        print("\nTeksti i enkriptuar: ", output_text)
+        print("Binary i enkriptuar: ", binary_string)
+        # output_text = FeistelCipher.binary_to_plaintext(binary_string)
+
+        output_text = FeistelCipher.binary_to_hex(binary_string)
+        print("Teksti i enkriptuar: ", output_text)
+
 
         return output_text
 
     def decrypt(self):
-        binary_message = FeistelCipher.message_to_binary(self.__message)
-        print("\n\nBinary Message is : ", binary_message)
+        # binary_message = FeistelCipher.message_to_binary(self.__message)
+        binary_message = FeistelCipher.hex_to_binary(self.__message)
+        print("Decrypt Binary Message is : ", binary_message)
         binary_message_blocks = FeistelCipher.binary_message_divide(binary_message)
-        print("\nBinary in blocks: ", binary_message_blocks)
+        print("Decrypt Binary in blocks: ", binary_message_blocks)
 
-        # for i in range(len(binary_message_blocks)):
-        #     binary_message_blocks[i] = FeistelCipher.remove_padding(binary_message_blocks[i])
-
-        counter  = 0
-        # placeholder = binary_message_blocks[0]
+        counter = 0
         encrypted_message_blocks = list()
         subkeys = self.__subkeys
         subkeys.reverse()
@@ -262,13 +266,16 @@ class FeistelCipher:
             for i in range(0, 16):
                 placeholder = FeistelCipher.feistel_round(placeholder, subkeys[i])
             placeholder = FeistelCipher.switch_left_with_right(placeholder)
-            # encrypted_message_blocks.append(FeistelCipher.switch_left_with_right(placeholder))
             encrypted_message_blocks.append(placeholder)
             counter += 1
 
+        print("Encrypted blocks: ", encrypted_message_blocks)
+        for i in range(len(encrypted_message_blocks)):
+            encrypted_message_blocks[i] = FeistelCipher.remove_padding(encrypted_message_blocks[i])
+
         binary_string = ''.join(m for m in encrypted_message_blocks)
-        print("\nBinary i enkriptuar: ", binary_string)
+        print("Binary i enkriptuar: ", binary_string)
         output_text = FeistelCipher.binary_to_plaintext(binary_string)
-        print("\nTeksti i enkriptuar: ", output_text)
+        print("Teksti i enkriptuar: ", output_text)
 
         return output_text

@@ -1,11 +1,13 @@
-import PyQt5.QtWidgets as qtw
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5 import QtCore
-import sys, re
-from FeistelCipher import *
+import re
+import sys
 
+import PyQt5.QtWidgets as qtw
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QMessageBox
+
+from FeistelCipher import *
 
 
 class MyWindow(QMainWindow):
@@ -16,6 +18,7 @@ class MyWindow(QMainWindow):
         self.setWindowTitle("Feistel Cipher")
         self.setFixedWidth(700)
         self.setFixedHeight(500)
+        self.font = QFont("Arial Unicode MS")
 
         # Krijimi i tabave dhe shtimi i tyre ne dritare
         self.tabs = QTabWidget()
@@ -44,6 +47,7 @@ class MyWindow(QMainWindow):
 
         self.plaintext_label = QLabel("<h4>Enter your plaintext here:</h4>")
         self.plaintext_box = qtw.QTextEdit()
+        self.plaintext_box.setFont(self.font)
         self.encrypt_button = qtw.QPushButton("Encrypt")
         self.encrypt_button.clicked.connect(self.encryption)
 
@@ -71,6 +75,7 @@ class MyWindow(QMainWindow):
         self.decrypt_key_textbox = qtw.QLineEdit()
         self.decrypt_ciphertext_label = QLabel("<h4>Enter your ciphertext:</h4>")
         self.decrypt_ciphertext_box = qtw.QTextEdit()
+        self.decrypt_ciphertext_box.setFont(self.font)
         self.decrypt_button = qtw.QPushButton("Decrypt")
         self.decrypt_button.clicked.connect(self.decryption)
 
@@ -102,7 +107,8 @@ class MyWindow(QMainWindow):
             return None
         feistel = FeistelCipher(self.plaintext_box.toPlainText(), self.key_text_box.text())
         ciphertext = feistel.encrypt()
-        self.ciphertext_box.setText(ciphertext)
+        print("The encrypted ciphertext:", ciphertext)
+        self.ciphertext_box.setPlainText(ciphertext)
 
     def decryption(self):
         if len(self.key_text_box.text()) != 16:
@@ -113,7 +119,8 @@ class MyWindow(QMainWindow):
             return None
         feistel = FeistelCipher(self.decrypt_ciphertext_box.toPlainText(), self.decrypt_key_textbox.text())
         plaintext = feistel.decrypt()
-        self.decrypt_plaintext_box.setText(plaintext)
+        print("The decrypted plaintext", plaintext)
+        self.decrypt_plaintext_box.setPlainText(plaintext)
 
     @staticmethod
     def alert(message):
